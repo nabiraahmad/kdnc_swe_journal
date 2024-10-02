@@ -18,6 +18,9 @@ ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
 HELLO_EP = '/hello'
 HELLO_RESP = 'hello'
+TITLE_EP = '/title'
+TITLE_RESP = 'Title'
+TITLE = 'KDNC Journal'
 
 
 @api.route(HELLO_EP)
@@ -34,7 +37,7 @@ class HelloWorld(Resource):
         return {HELLO_RESP: 'world'}
 
 
-@api.route('/endpoints')
+@api.route(ENDPOINT_EP)
 class Endpoints(Resource):
     """
     This class will serve as live, fetchable documentation of what endpoints
@@ -42,7 +45,20 @@ class Endpoints(Resource):
     """
     def get(self):
         """
-        The `get()` method will return a list of available endpoints.
+        The `get()` method will return a sorted list of available endpoints.
         """
         endpoints = sorted(rule.rule for rule in api.app.url_map.iter_rules())
         return {"Available endpoints": endpoints}
+
+
+@api.route(TITLE_EP)
+class JournalTitle(Resource):
+    """
+    This class handles creating, reading,
+ updating, and deleting the journal title.
+    """
+    def get(self):
+        """
+        Retrieve the journal title
+        """
+        return {TITLE_RESP: TITLE}
