@@ -55,7 +55,7 @@ class Endpoints(Resource):
 class JournalTitle(Resource):
     """
     This class handles creating, reading,
- updating, and deleting the journal title.
+ updating, and deleting our journal title.
     """
     def get(self):
         """
