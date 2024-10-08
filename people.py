@@ -10,7 +10,15 @@ ROLES = 'roles'
 AFFILIATION  = 'affiliation'
 EMAIL = 'email'
 
-
+TEST_EMAIL = 'na2819@nyu.edu'
+TEST_PERSON_DICT = {
+	TEST_EMAIL: {
+		NAME: 'Nabira Ahmad',
+		ROLES: [],
+		AFFILIATION: 'NYU',
+		EMAIL: TEST_EMAIL,
+	},
+}
 
 """
 PARAMETERS: None
@@ -19,5 +27,5 @@ NOTE: Each user email is a key for another dictionary
 """
 
 def get_people():
-	users = {'na2819@nyu.edu': {}}
-	return users	
+	users = TEST_PERSON_DICT
+	return users
