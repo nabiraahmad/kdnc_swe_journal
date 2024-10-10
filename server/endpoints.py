@@ -76,7 +76,6 @@ class JournalTitle(Resource):
             DATE_RESP: DATE,
             PUBLISHER_RESP: PUBLISHER,
         }
-    
 
 
 @api.route(PEOPLE_EP)
@@ -90,6 +89,3 @@ class People(Resource):
         Retrieve the journal people
         """
         return ppl.get_people()
-    
-
-    
