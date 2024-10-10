@@ -9,6 +9,7 @@ from flask_restx import Resource, Api  # Namespace, fields
 from flask_cors import CORS
 
 # import werkzeug.exceptions as wz
+import data.people as ppl
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +22,14 @@ HELLO_RESP = 'hello'
 TITLE_EP = '/title'
 TITLE_RESP = 'Title'
 TITLE = 'KDNC Journal'
+
+EDITOR_RESP = 'Editor'
+EDITOR = 'dg3729@nyu.edu'
+DATE_RESP = 'Date'
+DATE = '2024-10-09'
+PUBLISHER = 'not sure'
+PUBLISHER_RESP = 'Publisher'
+PEOPLE_EP = '/people'
 
 
 @api.route(HELLO_EP)
@@ -61,4 +70,24 @@ class JournalTitle(Resource):
         """
         Retrieve the journal title
         """
-        return {TITLE_RESP: TITLE}
+        return {
+            TITLE_RESP: TITLE,
+            EDITOR_RESP: EDITOR,
+            DATE_RESP: DATE,
+            PUBLISHER_RESP: PUBLISHER,
+        }
+    
+
+ 
+@api.route(PEOPLE_EP)
+class People(Resource):
+    """
+    This class handles creating, reading,
+    updating, and deleting our journal people.
+    """
+    def get(self):
+        """
+        Retrieve the journal people
+        """
+        return ppl.get_people()
+    
