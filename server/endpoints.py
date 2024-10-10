@@ -78,7 +78,7 @@ class JournalTitle(Resource):
         }
     
 
- 
+
 @api.route(PEOPLE_EP)
 class People(Resource):
     """
@@ -90,4 +90,6 @@ class People(Resource):
         Retrieve the journal people
         """
         return ppl.get_people()
+    
+
     
