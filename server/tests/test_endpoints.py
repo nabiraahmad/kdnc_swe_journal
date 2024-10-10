@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-from data.users import NAME 
+# from data.people import NAME 
 
 import server.endpoints as ep
 
