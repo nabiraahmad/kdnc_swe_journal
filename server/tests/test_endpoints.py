@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-# from data.users import NAME 
+from data.people import NAME 
 
 import server.endpoints as ep
 
@@ -36,4 +36,4 @@ def test_get_people():
     for _id in resp_json:
         assert isinstance(_id, str)
         assert len(_id) > 0
-        # assert NAME in person 
+        #assert NAME in person
