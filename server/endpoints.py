@@ -9,7 +9,7 @@ from flask_restx import Resource, Api  # Namespace, fields
 from flask_cors import CORS
 
 # import werkzeug.exceptions as wz
-import data.users as ppl
+import data.people as ppl
 
 app = Flask(__name__)
 CORS(app)

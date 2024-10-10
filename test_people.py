@@ -9,3 +9,6 @@ def test_get_people():
 	for _id, person in people.items():
 		assert isinstance(_id, str)
 		assert ppl.NAME in person
+
+
+
