@@ -47,3 +47,15 @@ def delete_person(_id):
         return _id
     else:
         return None
+
+
+def update_person(name: str, affiliation: str, email: str):
+    people = get_people()
+    if email in people:
+        # Update the existing person's details
+        people[email][NAME] = name
+        people[email][AFFILIATION] = affiliation
+        return people[email]  # Return the updated person's details
+    else:
+        # If the person does not exist, raise an error
+        raise ValueError(f'Person with email {email} does not exist')
