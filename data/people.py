@@ -59,3 +59,19 @@ def update_person(name: str, affiliation: str, email: str):
     else:
         # If the person does not exist, raise an error
         raise ValueError(f'Person with email {email} does not exist')
+
+
+def create_Person(name: str, affiliation: str, email: str):
+    people = get_people()
+    if email in people:
+        raise ValueError(f'Adding a duplicate user with email {email=}')
+    people[email] = {NAME: name, AFFILIATION: affiliation, EMAIL: email}
+    return email
+
+
+def main():
+    print(get_people())
+
+
+if __name__ == '__main__':
+    main()
