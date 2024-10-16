@@ -28,6 +28,6 @@ ADD_EMAIL = 'bill@nyu.edu'
 def test_create_person():
     people = ppl.get_people()
     assert ADD_EMAIL not in people
-    ppl.create_Person('Nabira Ahmad', 'NYU', ADD_EMAIL)
+    ppl.create_Person('Bill Smith', 'NYU', ADD_EMAIL)
     people = ppl.get_people()
-    assert ADD_EMAIL in pe
+    assert ADD_EMAIL in people
