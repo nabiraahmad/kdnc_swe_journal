@@ -26,6 +26,7 @@ text_dict = {
     },
 }
 
+
 def read():
     text = text_dict
     return text
