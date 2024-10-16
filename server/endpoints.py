@@ -79,7 +79,6 @@ class JournalTitle(Resource):
             PUBLISHER_RESP: PUBLISHER,
         }
 
-
 @api.route(PEOPLE_EP)
 class People(Resource):
     """
@@ -92,11 +91,13 @@ class People(Resource):
         """
         return ppl.get_people()
 
+
+# People/User Delete Class
+# will delete valid users, and return 404 User Not Found for invalid users
 @api.route(f'{PEOPLE_EP}/<_id>')
 class PersonDelete(Resource):
     @api.response(HTTPStatus.OK, 'Sucess.')
-    @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
-    
+    @api.response(HTTPStatus.NOT_FOUND, 'No such person.')  
     def delete(self, _id):
         ret = ppl.delete_person(_id)
         if ret is not None:
@@ -104,3 +105,9 @@ class PersonDelete(Resource):
         else:
             raise wz.NotFound(f'No such person: {_id}')
 
+
+PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
+    ppl.NAME: fields.String,
+    ppl.EMAIL: fields.String,
+    ppl.AFFILIATION: fields.String,
+})
