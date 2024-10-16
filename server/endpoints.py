@@ -98,7 +98,7 @@ class People(Resource):
 @api.route(f'{PEOPLE_EP}/<_id>')
 class PersonDelete(Resource):
     @api.response(HTTPStatus.OK, 'Sucess.')
-    @api.response(HTTPStatus.NOT_FOUND, 'No such person.')  
+    @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
     def delete(self, _id):
         ret = ppl.delete_person(_id)
         if ret is not None:
