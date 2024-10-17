@@ -4,7 +4,7 @@ The endpoint called `endpoints` will return all available endpoints.
 """
 from http import HTTPStatus
 
-from flask import Flask  # , request
+from flask import Flask, request
 from flask_restx import Resource, Api, fields
 from flask_cors import CORS
 
@@ -112,3 +112,27 @@ PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
     ppl.EMAIL: fields.String,
     ppl.AFFILIATION: fields.String,
 })
+
+
+@api.route(f'/{PEOPLE_EP}/create')
+class PeopleCreate(Resource):
+    """
+    Add a person to the journal db.
+    """
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Accesptable')
+    @api.expect(PEOPLE_CREATE_FLDS)
+    def put(self):
+        """
+        Add a person.
+        """
+
+        try:
+            ret = ppl.create(request.json)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Coult not add person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Person added!', 'ret': ret,
+        }
