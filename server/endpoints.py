@@ -32,6 +32,7 @@ PUBLISHER = 'not sure'
 PUBLISHER_RESP = 'Publisher'
 PEOPLE_EP = '/people'
 MESSAGE = 'Message'
+RETURN = 'Return'
 
 
 @api.route(HELLO_EP)
@@ -114,7 +115,7 @@ PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
 })
 
 
-@api.route(f'/{PEOPLE_EP}/create')
+@api.route(f'{PEOPLE_EP}/create')
 class PeopleCreate(Resource):
     """
     Add a person to the journal db.
@@ -129,10 +130,14 @@ class PeopleCreate(Resource):
         """
 
         try:
-            ret = ppl.create(request.json)
+            name = request.json.get(ppl.NAME)
+            affiliation = request.json.get(ppl.AFFILIATION)
+            email = request.json.get(ppl.EMAIL)
+            ret = ppl.create_person(name, affiliation, email)
         except Exception as err:
             raise wz.NotAcceptable(f'Coult not add person: '
                                    f'{err=}')
         return {
-            MESSAGE: 'Person added!', 'ret': ret,
+            MESSAGE: 'Person added!',
+            RETURN: ret,
         }
