@@ -31,3 +31,9 @@ def test_create_person():
     ppl.create_Person('Bill Smith', 'NYU', ADD_EMAIL)
     people = ppl.get_people()
     assert ADD_EMAIL in people
+
+
+def test_create_duplicate_person():
+    with pytest.raises(ValueError):
+        ppl.create_person('Do not care about me', 
+                          'Or affiliation', ppl.TEST_EMAIL)
