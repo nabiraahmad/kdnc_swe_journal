@@ -37,3 +37,9 @@ def test_create_duplicate_person():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about me', 
                           'Or affiliation', ppl.TEST_EMAIL)
+
+
+def test_create_bad_email():
+    with pytest.raises(ValueError):
+        ppl.create_person('Do not care about name',
+                   'Or affiliation', 'bademail')
