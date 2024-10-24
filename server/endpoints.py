@@ -10,6 +10,7 @@ from flask_cors import CORS
 
 import werkzeug.exceptions as wz
 import data.people as ppl
+import data.text as txt
 
 app = Flask(__name__)
 CORS(app)
@@ -32,6 +33,7 @@ PUBLISHER = 'not sure'
 PUBLISHER_RESP = 'Publisher'
 PEOPLE_EP = '/people'
 MESSAGE = 'Message'
+TEXT_EP = '/text'
 RETURN = 'Return'
 
 
@@ -139,5 +141,41 @@ class PeopleCreate(Resource):
                                    f'{err=}')
         return {
             MESSAGE: 'Person added!',
+            RETURN: ret,
+        }
+
+
+TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
+    txt.KEY: fields.String,
+    txt.TITLE: fields.String,
+    txt.TEXT: fields.String,
+    txt.EMAIL: fields.String,
+})
+
+
+@api.route('/text/create')
+class TextCreate(Resource):
+    """
+    Add a text entry to the journal.
+    """
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    @api.expect(TEXT_CREATE_FLDS)
+    def put(self):
+        """
+        Add a text entry.
+        """
+
+        try:
+            key = request.json.get(txt.KEY)
+            title = request.json.get(txt.TITLE)
+            text_content = request.json.get(txt.TEXT)
+            email = request.json.get(txt.EMAIL)
+            ret = txt.create(key, title, text_content, email)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not add text entry: {err}')
+        return {
+            MESSAGE: 'Text entry added!',
             RETURN: ret,
         }
