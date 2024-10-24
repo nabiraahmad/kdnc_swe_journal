@@ -37,3 +37,20 @@ def test_get_people():
         assert isinstance(_id, str)
         assert len(_id) > 0
         #assert NAME in person
+
+def test_create_text_entry():
+    new_text_entry = {
+        'key': 'TestPage',
+        'title': 'Test Page Title',
+        'text': 'This is the content of the test page.',
+        'email': 'test@journal.com'
+    }
+    
+    resp = TEST_CLIENT.put(ep.TEXT_EP + '/create', json=new_text_entry)
+    resp_json = resp.get_json()
+
+    assert 'Return' in resp_json
+    assert resp_json['Return']['key'] == new_text_entry['key']
+    assert resp_json['Return']['title'] == new_text_entry['title']
+    assert resp_json['Return']['text'] == new_text_entry['text']
+    assert resp_json['Return']['email'] == new_text_entry['email']
