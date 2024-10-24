@@ -28,5 +28,38 @@ text_dict = {
 
 
 def read():
-    text = text_dict
-    return text
+    return text_dict
+
+def create(key, title, text, email):
+    if key in text_dict:
+        raise ValueError(f"Entry with key '{key}' already exists.")
+    text_dict[key] = {
+        KEY: key,
+        TITLE: title,
+        TEXT: text,
+        EMAIL: email,
+    }
+    return text_dict[key]
+
+def update(key, title=None, text=None, email=None):
+    if key not in text_dict:
+        raise ValueError(f"Entry with key '{key}' does not exist.")
+    if title:
+        text_dict[key][TITLE] = title
+    if text:
+        text_dict[key][TEXT] = text
+    if email:
+        text_dict[key][EMAIL] = email
+    return text_dict[key]
+
+def delete(key):
+    if key not in text_dict:
+        raise ValueError(f"Entry with key '{key}' does not exist.")
+    del text_dict[key]
+    return key
+
+def main():
+    print(read())
+
+if __name__ == '__main__':
+    main()
