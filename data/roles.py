@@ -2,15 +2,22 @@
 This module manages the roles a person can have for the journal
 """
 
+AUTHOR_CODE = 'AU'
+TEST_CODE = AUTHOR_CODE
+
 ROLES = {
-    'AU': 'Author',
+    AUTHOR_CODE: 'Author',
     'ED': 'Editor',
     'RE': 'Referee',
 }
 
 
-def get_roles():
+def get_roles() -> dict:
     return ROLES
+
+
+def is_valid(code: str) -> bool:
+    return code in ROLES
 
 
 def main():
