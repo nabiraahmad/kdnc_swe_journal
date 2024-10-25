@@ -13,3 +13,9 @@ def get_roles():
     return ROLES
 
 
+def main():
+    print(get_roles())
+
+
+if __name__ == '__main__':
+    main()
