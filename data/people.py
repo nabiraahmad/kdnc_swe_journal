@@ -94,8 +94,21 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         return email
 
 
+def get_masthead() -> dict:
+    masthead = {}
+    mh_roles = rls.get_masthead_roles()
+    for mh_role, text in mh_roles.items():
+        people_w_role = {}
+        for person in get_people():
+            pass
+            # if has_role(person):
+            #     put their record in people_w_role
+        masthead[text] = people_w_role
+    return masthead
+
+
 def main():
-    print(get_people())
+    print(get_masthead())
 
 
 if __name__ == '__main__':
