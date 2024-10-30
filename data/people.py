@@ -3,6 +3,8 @@ This module interfaces to our user data.
 """
 import re
 
+import data.roles as rls
+
 MIN_USER_NAME_LEN = 2
 
 # people fields:
@@ -68,23 +70,28 @@ def update_person(name: str, affiliation: str, email: str):
         raise ValueError(f'Person with email {email} does not exist')
 
 
-def is_valid_person(name: str, affiliation: str, email: str) -> bool:
+def is_valid_person(name: str, affiliation: str, email: str,
+                    role: str) -> bool:
     people = get_people()
     if email in people:
         raise ValueError(f'Adding duplicate {email=}')
     if not is_valid_email(email):
         raise ValueError(f'Invalid email: {email}')
+    if not rls.is_valid(role):
+        raise ValueError(f'Invalid role: {role}')
     return True
 
 
-def create_person(name: str, affiliation: str, email: str):
+def create_person(name: str, affiliation: str, email: str, role: str):
     people = get_people()
-    if email in people:
-        raise ValueError(f'Adding a duplicate user with email {email=}')
-    if not is_valid_email(email):
-        raise ValueError(f'Invalid email: {email}')
-    people[email] = {NAME: name, AFFILIATION: affiliation, EMAIL: email}
-    return email
+    if is_valid_person(name, affiliation, email, role):
+        people[email] = {
+            NAME: name,
+            AFFILIATION: affiliation,
+            EMAIL: email,
+            ROLES: [role]
+        }
+        return email
 
 
 def main():
