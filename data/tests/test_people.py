@@ -2,6 +2,8 @@ import pytest
 
 import data.people as ppl
 
+from data.roles import TEST_CODE
+
 NO_AT = 'jkajsd'
 NO_NAME = '@kalsj'
 NO_DOMAIN = 'kajshd@'
@@ -41,7 +43,7 @@ ADD_EMAIL = 'bill@nyu.edu'
 def test_create_person():
     people = ppl.get_people()
     assert ADD_EMAIL not in people
-    ppl.create_person('Bill Smith', 'NYU', ADD_EMAIL)
+    ppl.create_person('Bill Smith', 'NYU', ADD_EMAIL, TEST_CODE)
     people = ppl.get_people()
     assert ADD_EMAIL in people
 
@@ -49,10 +51,10 @@ def test_create_person():
 def test_create_duplicate_person():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about name', 
-                          'Or affiliation', ppl.TEST_EMAIL)
+                          'Or affiliation', ppl.TEST_EMAIL, TEST_CODE)
 
 
 def test_create_bad_email():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about name',
-                   'Or affiliation', 'bademail')
+                          'Or affiliation', 'bademail', TEST_CODE)
