@@ -114,7 +114,8 @@ def create_person(name: str, affiliation: str, email: str, role: str):
 
 
 def update(name: str, affiliation: str, email: str, role: str):
-     pass
+    pass
+
 
 def create_mh_rec(person: dict) -> dict:
     mh_rec = {}
