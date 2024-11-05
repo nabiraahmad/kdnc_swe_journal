@@ -39,11 +39,15 @@ RETURNS: Dictionary of users keyed on user email
 NOTE: Each user email is a key for another dictionary
 """
 
-CHAR_OR_DIGIT = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+CHAR_OR_DIGIT = '[A-Za-z0-9]'
+VALID_CHARS = '[A-Za-z0-9_.]'
 
 
 def is_valid_email(email: str) -> bool:
-    return re.match(CHAR_OR_DIGIT, email) is not None
+    return re.fullmatch(f"{VALID_CHARS}+@{CHAR_OR_DIGIT}+"
+                        + "\\."
+                        + f"{CHAR_OR_DIGIT}"
+                        + "{2,3}", email)
 
 
 def get_people():
@@ -79,14 +83,21 @@ def update_person(name: str, affiliation: str, email: str):
 
 
 def is_valid_person(name: str, affiliation: str, email: str,
-                    role: str) -> bool:
+                    role: str, roles: list = None) -> bool:
+
     people = get_people()
     if email in people:
         raise ValueError(f'Adding duplicate {email=}')
     if not is_valid_email(email):
         raise ValueError(f'Invalid email: {email}')
-    if not rls.is_valid(role):
-        raise ValueError(f'Invalid role: {role}')
+    if role:
+        if not rls.is_valid(role):
+            raise ValueError(f'Invalid role: {role}')
+    elif roles:
+        for role in roles:
+            if not rls.is_valid(role):
+                raise ValueError(f'Invalid role: {role}')
+
     return True
 
 
@@ -101,6 +112,9 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         }
         return email
 
+
+def update(name: str, affiliation: str, email: str, role: str):
+     pass
 
 def create_mh_rec(person: dict) -> dict:
     mh_rec = {}
