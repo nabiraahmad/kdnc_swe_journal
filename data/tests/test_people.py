@@ -11,6 +11,15 @@ NO_SUB_DOMAIN = 'kajshd@com'
 DOMAIN_TOO_SHORT = 'kajshd@nyu.e'
 DOMAIN_TOO_LONG = 'kajshd@nyu.eedduu'
 
+TEMP_EMAIL = 'temp_person@temp.org'
+
+@pytest.fixture(scope='function')
+def temp_person():
+    ret = ppl.create_person('Joe Smith', 'NYU', TEMP_EMAIL, TEST_CODE)
+    yield ret
+    ppl.delete_person(ret)
+
+
 def test_is_valid_email_no_at():
     assert not ppl.is_valid_email(NO_AT)
 
@@ -66,6 +75,12 @@ def test_create_duplicate_person():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about name', 
                           'Or affiliation', ppl.TEST_EMAIL, TEST_CODE)
+
+VALID_ROLES = ['ED', 'AU']
+
+
+def test_update(temp_person):
+    ppl.update('Buffalo Bill', 'Ubuffalo', temp_person, VALID_ROLES)
 
 
 def test_create_bad_email():

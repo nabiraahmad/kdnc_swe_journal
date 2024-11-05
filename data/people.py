@@ -83,11 +83,8 @@ def update_person(name: str, affiliation: str, email: str):
 
 
 def is_valid_person(name: str, affiliation: str, email: str,
-                    role: str, roles: list = None) -> bool:
+                    role: str = None, roles: list = None) -> bool:
 
-    people = get_people()
-    if email in people:
-        raise ValueError(f'Adding duplicate {email=}')
     if not is_valid_email(email):
         raise ValueError(f'Invalid email: {email}')
     if role:
@@ -103,7 +100,13 @@ def is_valid_person(name: str, affiliation: str, email: str,
 
 def create_person(name: str, affiliation: str, email: str, role: str):
     people = get_people()
+    if email in people:
+        raise ValueError(f'Adding duplicate {email=}')
     if is_valid_person(name, affiliation, email, role):
+
+        roles = []
+        if role:
+            roles.append(role)
         people[email] = {
             NAME: name,
             AFFILIATION: affiliation,
@@ -113,8 +116,19 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         return email
 
 
-def update(name: str, affiliation: str, email: str, role: str):
-    pass
+def update(name: str, affiliation: str, email: str, roles: list):
+    people = get_people()
+    if email not in people:
+        raise ValueError('Updating non-existing person: {email=}')
+    if is_valid_person(name, affiliation, email, roles=roles):
+        people[email] = {
+            NAME: name,
+            AFFILIATION: affiliation,
+            EMAIL: email,
+            ROLES: roles
+        }
+
+        return email
 
 
 def create_mh_rec(person: dict) -> dict:
