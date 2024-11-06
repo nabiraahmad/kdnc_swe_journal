@@ -181,3 +181,15 @@ class TextCreate(Resource):
             MESSAGE: 'Text entry added!',
             RETURN: ret,
         }
+
+
+MASTHEAD = 'Masthead'
+
+
+@api.route(f'{PEOPLE_EP}/masthead')
+class Masthead(Resource):
+    """
+    Get a journal's masthead.
+    """
+    def get(self):
+        return {MASTHEAD: ppl.get_masthead()}
