@@ -43,6 +43,17 @@ def create(key, title, text, email):
     return text_dict[key]
 
 
+def get_one(key: str) -> dict:
+    """
+    Takes a key and returns the page dict for that key
+    Returns an empty dict is key doesn't exist
+    """
+    result = {}
+    if key in text_dict:
+        result = text_dict[key]
+    return result
+
+
 def update(key, title=None, text=None, email=None):
     if key not in text_dict:
         raise ValueError(f"Entry with key '{key}' does not exist.")

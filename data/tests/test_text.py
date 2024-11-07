@@ -20,6 +20,11 @@ def test_read():
         assert isinstance(content[txt.TEXT], str)
         assert isinstance(content[txt.EMAIL], str)
 
+
+def test_get_one_not_existent():
+    assert txt.get_one("Not a page key!") == {}
+
+
 def test_create():
     key = 'NewPage'
     title = 'New Page Title'
