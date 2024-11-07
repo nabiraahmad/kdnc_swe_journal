@@ -99,3 +99,11 @@ def test_create_bad_email():
 def test_get_masthead():
     mh = ppl.get_masthead()
     assert isinstance(mh, dict)
+
+
+def test_get_mh_fields():
+    flds = ppl.get_mh_fields()
+    assert isinstance(flds,list)
+    assert len(flds) > 0
+
+    
