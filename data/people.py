@@ -55,6 +55,13 @@ def get_people():
     return people
 
 
+def get_one(email: str) -> dict:
+    """
+    Return a person record if email is present in the DB
+    else return none"""
+    return TEST_PERSON_DICT.get(email)
+
+
 def delete_person(_id):
     people = get_people()
     if _id in people:

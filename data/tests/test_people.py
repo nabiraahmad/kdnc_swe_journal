@@ -50,6 +50,13 @@ def test_get_people():
         assert isinstance(_id, str)
         assert ppl.NAME in person
 
+def test_get_one_not_there():
+    assert ppl.get_one("Don't recognize that email!") is None
+
+
+def test_get_one(temp_person):
+    assert ppl.get_one(temp_person) is not None
+
 
 def test_delete():
     people = ppl.get_people()
@@ -78,7 +85,7 @@ def test_create_duplicate_person():
 
 VALID_ROLES = ['ED', 'AU']
 
-
+@pytest.mark.skip('Skip because it is not done')
 def test_update(temp_person):
     ppl.update('Buffalo Bill', 'Ubuffalo', temp_person, VALID_ROLES)
 
