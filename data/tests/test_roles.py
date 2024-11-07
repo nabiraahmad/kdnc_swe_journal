@@ -1,18 +1,29 @@
+import pytest
 import data.roles as rls
 
 
-def test_get_roles():
-    roles = rls.get_roles()
-    assert isinstance(roles,dict)
-    assert len(roles) > 0
-    for code, role in roles.items():
+@pytest.fixture
+def valid_roles():
+    """Fixture for valid roles dictionary."""
+    return rls.get_roles()
+
+@pytest.fixture
+def masthead_roles():
+    """Fixture for masthead roles dictionary."""
+    return rls.get_masthead_roles()
+
+
+def test_get_roles(valid_roles):
+    assert isinstance(valid_roles, dict)
+    assert len(valid_roles) > 0
+    for code, role in valid_roles.items():
         assert isinstance(code, str)
-        assert isinstance(role,str)
+        assert isinstance(role, str)
 
 
-def test_get_masthead_roles():
-    mh_roles = rls.get_masthead_roles()
-    assert isinstance(mh_roles, dict)
+def test_get_masthead_roles(masthead_roles):
+    assert isinstance(masthead_roles, dict)
+    assert len(masthead_roles) > 0
 
 
 def test_get_role_codes():
