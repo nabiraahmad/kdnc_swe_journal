@@ -159,6 +159,10 @@ def get_masthead() -> dict:
     return masthead
 
 
+def get_mh_fields(journal_code=None) -> list:
+    return MH_FIELDS
+
+
 def main():
     print(get_masthead())
 
