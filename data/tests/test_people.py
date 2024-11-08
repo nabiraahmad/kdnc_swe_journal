@@ -2,7 +2,7 @@ import pytest
 
 import data.people as ppl
 
-from data.roles import TEST_CODE
+from data.roles import TEST_CODE as TEST_ROLE_CODE
 
 NO_AT = 'jkajsd'
 NO_NAME = '@kalsj'
@@ -15,10 +15,17 @@ TEMP_EMAIL = 'temp_person@temp.org'
 
 @pytest.fixture(scope='function')
 def temp_person():
-    ret = ppl.create_person('Joe Smith', 'NYU', TEMP_EMAIL, TEST_CODE)
+    ret = ppl.create_person('Joe Smith', 'NYU', TEMP_EMAIL, TEST_ROLE_CODE)
     yield ret
     ppl.delete_person(ret)
+ 
+def test_has_role(temp_person):
+    person_rec = ppl.get_one(temp_person)
+    assert ppl.has_role(person_rec, TEST_ROLE_CODE)
 
+def test_doesnt_have_role(temp_person):
+    person_rec = ppl.get_one(temp_person)
+    assert not ppl.has_role(person_rec, 'Not a good role!')
 
 def test_is_valid_email_no_at():
     assert not ppl.is_valid_email(NO_AT)
@@ -73,7 +80,7 @@ ADD_EMAIL = 'bill@nyu.edu'
 def test_create_person():
     people = ppl.get_people()
     assert ADD_EMAIL not in people
-    ppl.create_person('Bill Smith', 'NYU', ADD_EMAIL, TEST_CODE)
+    ppl.create_person('Bill Smith', 'NYU', ADD_EMAIL, TEST_ROLE_CODE)
     people = ppl.get_people()
     assert ADD_EMAIL in people
 
@@ -81,7 +88,7 @@ def test_create_person():
 def test_create_duplicate_person():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about name', 
-                          'Or affiliation', ppl.TEST_EMAIL, TEST_CODE)
+                          'Or affiliation', ppl.TEST_EMAIL, TEST_ROLE_CODE)
 
 VALID_ROLES = ['ED', 'AU']
 
@@ -93,7 +100,7 @@ def test_update(temp_person):
 def test_create_bad_email():
     with pytest.raises(ValueError):
         ppl.create_person('Do not care about name',
-                          'Or affiliation', 'bademail', TEST_CODE)
+                          'Or affiliation', 'bademail', TEST_ROLE_CODE)
 
 
 def test_get_masthead():
