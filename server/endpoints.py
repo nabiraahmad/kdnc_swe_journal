@@ -99,7 +99,21 @@ class People(Resource):
 # People/User Delete Class
 # will delete valid users, and return 404 User Not Found for invalid users
 @api.route(f'{PEOPLE_EP}/<_id>')
-class PersonDelete(Resource):
+class Person(Resource):
+    """
+    This class handles creating, reading, updating
+    and deleting journal people.
+    """
+    def get(self, _id):
+        """
+        Retrieve a journal person.
+        """
+        person = ppl.get_one(_id)
+        if person:
+            return person
+        else:
+            raise wz.NotFound(f'No such record: {_id}')
+
     @api.response(HTTPStatus.OK, 'Sucess.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
     def delete(self, _id):
