@@ -31,13 +31,27 @@ def test_title():
     assert isinstance(resp_json[ep.TITLE_RESP], str)
     assert len(resp_json[ep.TITLE_RESP]) > 0
 
-def test_get_people():
+@patch('data.people.get_people', autospec=True,
+       return_value={'id': {NAME: 'Joe Schmoe'}})
+def test_get_people(mock_get_people):
     resp = TEST_CLIENT.get(ep.PEOPLE_EP)
+    assert resp.status_code == OK
     resp_json = resp.get_json()
-    for _id in resp_json:
+    for _id, person in resp_json.items():
         assert isinstance(_id, str)
         assert len(_id) > 0
-        #assert NAME in person
+        assert NAME in person
+
+@patch('data.people.get_one', autospec=True,
+       return_value={NAME: 'Joe Schmoe'})
+def test_get_one(mock_get_people):
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
+    assert resp.status_code == OK
+
+@patch('data.people.get_one', autospec=True, return_value=None)
+def test_get_one_not_found(mock_get_people):
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
+    assert resp.status_code == NOT_FOUND
 
 def test_create_text_entry():
     new_text_entry = {
@@ -46,7 +60,7 @@ def test_create_text_entry():
         'text': 'This is the content of the test page.',
         'email': 'test@journal.com'
     }
-    
+
     resp = TEST_CLIENT.put(ep.TEXT_EP + '/create', json=new_text_entry)
     resp_json = resp.get_json()
 
