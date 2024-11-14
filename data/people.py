@@ -50,9 +50,9 @@ def is_valid_email(email: str) -> bool:
                         + "{2,3}", email)
 
 
-def get_people():
-    people = TEST_PERSON_DICT
-    return people
+def get_people() -> dict:
+    print('get_people() has been called')
+    return TEST_PERSON_DICT
 
 
 def get_one(email: str) -> dict:
