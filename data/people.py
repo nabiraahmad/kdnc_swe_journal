@@ -21,13 +21,13 @@ MH_FIELDS = [NAME, AFFILIATION]
 TEST_PERSON_DICT = {
     TEST_EMAIL: {
         NAME: 'Nabira Ahmad',
-        ROLES: [],
+        ROLES: [rls.ED_CODE],
         AFFILIATION: 'NYU',
         EMAIL: TEST_EMAIL,
     },
     DEL_EMAIL: {
         NAME: 'Dariana Gonzalez',
-        ROLES: [],
+        ROLES: [rls.CE_CODE],
         AFFILIATION: 'NYU',
         EMAIL: DEL_EMAIL,
     },
@@ -138,9 +138,13 @@ def update(name: str, affiliation: str, email: str, roles: list):
         return email
 
 
+def get_mh_fields(journal_code=None) -> list:
+    return MH_FIELDS
+
+
 def create_mh_rec(person: dict) -> dict:
     mh_rec = {}
-    for field in MH_FIELDS:
+    for field in get_mh_fields():
         mh_rec[field] = person.get(field, '')
     return mh_rec
 
@@ -157,10 +161,6 @@ def get_masthead() -> dict:
                 people_w_role.append(rec)
         masthead[text] = people_w_role
     return masthead
-
-
-def get_mh_fields(journal_code=None) -> list:
-    return MH_FIELDS
 
 
 def main():
