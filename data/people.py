@@ -3,7 +3,10 @@ This module interfaces to our user data.
 """
 import re
 
+import data.db_connect as dbc
 import data.roles as rls
+
+PEOPLE_COLLECT = 'people'
 
 MIN_USER_NAME_LEN = 2
 
@@ -33,11 +36,10 @@ TEST_PERSON_DICT = {
     },
 }
 
-"""
-PARAMETERS: None
-RETURNS: Dictionary of users keyed on user email
-NOTE: Each user email is a key for another dictionary
-"""
+
+client = dbc.connect_db()
+print(f'{client=}')
+
 
 CHAR_OR_DIGIT = '[A-Za-z0-9]'
 VALID_CHARS = '[A-Za-z0-9_.]'
@@ -51,8 +53,9 @@ def is_valid_email(email: str) -> bool:
 
 
 def get_people() -> dict:
-    print('get_people() has been called')
-    return TEST_PERSON_DICT
+    people = dbc.read_dict(PEOPLE_COLLECT, EMAIL)
+    print(f'{people=}')
+    return people
 
 
 def get_one(email: str) -> dict:
@@ -114,12 +117,10 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         roles = []
         if role:
             roles.append(role)
-        people[email] = {
-            NAME: name,
-            AFFILIATION: affiliation,
-            EMAIL: email,
-            ROLES: [role]
-        }
+        person = {NAME: name, AFFILIATION: affiliation,
+                  EMAIL: email, ROLES: roles}
+        print(person)
+        dbc.create(PEOPLE_COLLECT, person)
         return email
 
 
