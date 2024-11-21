@@ -134,7 +134,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+<<<<<<< HEAD
 
 # MongoDB
 mongod
 mongos
+=======
+>>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620

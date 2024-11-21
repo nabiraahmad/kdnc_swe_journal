@@ -65,9 +65,19 @@ def get_one(email: str) -> dict:
     return TEST_PERSON_DICT.get(email)
 
 
+<<<<<<< HEAD
 def delete_person(email: str):
     print(f'{EMAIL=}, {email=}')
     return dbc.delete(PEOPLE_COLLECT, {EMAIL: email})
+=======
+def delete_person(_id):
+    people = get_people()
+    if _id in people:
+        del people[_id]
+        return _id
+    else:
+        return None
+>>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620
 
 
 def has_role(person: dict, role: str) -> bool:
@@ -76,7 +86,11 @@ def has_role(person: dict, role: str) -> bool:
     return False
 
 
+<<<<<<< HEAD
 def update_person(name: str, affiliation: str, email: str, roles: list):
+=======
+def update_person(name: str, affiliation: str, email: str):
+>>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620
     existing_person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
     if not existing_person:
         raise ValueError(f'Updating non-existing person with {email=}')
