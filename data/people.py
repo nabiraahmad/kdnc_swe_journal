@@ -62,8 +62,11 @@ def get_one(email: str) -> dict:
     """
     Return a person record if email is present in the DB
     else return none"""
-    return TEST_PERSON_DICT.get(email)
+    return dbc.get_one(PEOPLE_COLLECT, {EMAIL: email})
 
+
+def exists(email: str) -> bool:
+    return get_one(email) is not None
 
 
 def delete_person(email: str):
@@ -89,24 +92,18 @@ def has_role(person: dict, role: str) -> bool:
 # <<<<<<< HEAD
 # def update_person(name: str, affiliation: str, email: str, roles: list):
 # =======
-def update_person(name: str, affiliation: str, email: str):
+def update_person(name: str, affiliation: str, email: str, roles: list):
 # >>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620
-    existing_person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
-    if not existing_person:
+    if not exists(email):
         raise ValueError(f'Updating non-existing person with {email=}')
     if is_valid_person(name, affiliation, email, roles=roles):
-        update_dict = {
-            NAME: name,
-            AFFILIATION: affiliation,
-            ROLES: roles
-        }
-    result = dbc.update_doc(PEOPLE_COLLECT, {EMAIL: email}, update_dict)
-    if result.matched_count > 0:
-        print(f"Updated {email} successfully.")
+        ret = dbc.update(PEOPLE_COLLECT,
+                         {EMAIL: email},
+                         {NAME: name, AFFILIATION: affiliation,
+                         EMAIL: email, ROLES: roles})
+        print(f'{ret=}')
         return email
-    else:
-        raise RuntimeError(f"Failed to update person with {email=}")
-
+           
 
 def is_valid_person(name: str, affiliation: str, email: str,
                     role: str = None, roles: list = None) -> bool:
@@ -125,8 +122,7 @@ def is_valid_person(name: str, affiliation: str, email: str,
 
 
 def create_person(name: str, affiliation: str, email: str, role: str):
-    people = get_people()
-    if email in people:
+    if exists(email):
         raise ValueError(f'Adding duplicate {email=}')
     if is_valid_person(name, affiliation, email, role):
 
@@ -140,19 +136,19 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         return email
 
 
-def update(name: str, affiliation: str, email: str, roles: list):
-    people = get_people()
-    if email not in people:
-        raise ValueError('Updating non-existing person: {email=}')
-    if is_valid_person(name, affiliation, email, roles=roles):
-        people[email] = {
-            NAME: name,
-            AFFILIATION: affiliation,
-            EMAIL: email,
-            ROLES: roles
-        }
+# def update(name: str, affiliation: str, email: str, roles: list):
+#     people = get_people()
+#     if email not in people:
+#         raise ValueError('Updating non-existing person: {email=}')
+#     if is_valid_person(name, affiliation, email, roles=roles):
+#         people[email] = {
+#             NAME: name,
+#             AFFILIATION: affiliation,
+#             EMAIL: email,
+#             ROLES: roles
+#         }
 
-        return email
+#         return email
 
 
 def get_mh_fields(journal_code=None) -> list:

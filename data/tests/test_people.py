@@ -77,6 +77,10 @@ def test_get_one(temp_person):
     assert ppl.get_one(temp_person) is not None
 
 
+def test_exists(temp_person):
+    assert ppl.exists(temp_person)
+    
+
 def test_delete():
     people = ppl.get_people()
     old_len = len(people)
