@@ -84,6 +84,9 @@ def test_get_one(temp_person):
 def test_exists(temp_person):
     assert ppl.exists(temp_person)
 
+def test_doesnt_exist():
+    assert not ppl.exists('Not an existing email!')
+
 def test_delete(temp_person):
     ppl.delete_person(temp_person)
     assert not ppl.exists(temp_person)

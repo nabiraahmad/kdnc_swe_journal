@@ -21,21 +21,6 @@ DEL_EMAIL = 'dg3729@nyu.edu'
 
 MH_FIELDS = [NAME, AFFILIATION]
 
-TEST_PERSON_DICT = {
-    TEST_EMAIL: {
-        NAME: 'Nabira Ahmad',
-        ROLES: [rls.ED_CODE],
-        AFFILIATION: 'NYU',
-        EMAIL: TEST_EMAIL,
-    },
-    DEL_EMAIL: {
-        NAME: 'Dariana Gonzalez',
-        ROLES: [rls.CE_CODE],
-        AFFILIATION: 'NYU',
-        EMAIL: DEL_EMAIL,
-    },
-}
-
 
 client = dbc.connect_db()
 print(f'{client=}')

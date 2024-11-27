@@ -97,31 +97,31 @@ class People(Resource):
 
 
 # People/User Delete Class
-# will delete valid users, and return 404 User Not Found for invalid users
-@api.route(f'{PEOPLE_EP}/<_id>')
+# will delete valid users, and return 404 User Not Focund for invalid users
+@api.route(f'{PEOPLE_EP}/<email>')
 class Person(Resource):
     """
     This class handles creating, reading, updating
     and deleting journal people.
     """
-    def get(self, _id):
+    def get(self, email):
         """
         Retrieve a journal person.
         """
-        person = ppl.get_one(_id)
+        person = ppl.get_one(email)
         if person:
             return person
         else:
-            raise wz.NotFound(f'No such record: {_id}')
+            raise wz.NotFound(f'No such record: {email}')
 
     @api.response(HTTPStatus.OK, 'Sucess.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
-    def delete(self, _id):
-        ret = ppl.delete_person(_id)
+    def delete(self, email):
+        ret = ppl.delete_person(email)
         if ret is not None:
             return {'Deleted': ret}
         else:
-            raise wz.NotFound(f'No such person: {_id}')
+            raise wz.NotFound(f'No such person: {email}')
 
 
 PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
