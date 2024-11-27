@@ -39,8 +39,8 @@ def connect_db():
 
 
 def convert_mongo_id(doc: dict):
-     if MONGO_ID in doc:
-         doc[MONGO_ID] = str(doc[MONGO_ID])
+    if MONGO_ID in doc:
+        doc[MONGO_ID] = str(doc[MONGO_ID])
 
 
 def create(collection, doc, db=SE_DB):
@@ -81,7 +81,7 @@ def read(collection, db=SE_DB, no_id=True) -> list:
     for doc in client[db][collection].find():
         if no_id:
             del doc[MONGO_ID]
-        else: 
+        else:
             convert_mongo_id(doc)
         ret.append(doc)
     return ret

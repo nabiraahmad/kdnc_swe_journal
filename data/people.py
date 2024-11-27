@@ -71,16 +71,7 @@ def exists(email: str) -> bool:
 
 def delete_person(email: str):
     print(f'{EMAIL=}, {email=}')
-    return dbc.delete(PEOPLE_COLLECT, {EMAIL: email})
-# =======
-# def delete_person(_id):
-#     people = get_people()
-#     if _id in people:
-#         del people[_id]
-#         return _id
-#     else:
-#         return None
-# >>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620
+    return dbc.del_one(PEOPLE_COLLECT, {EMAIL: email})
 
 
 def has_role(person: dict, role: str) -> bool:
@@ -89,21 +80,17 @@ def has_role(person: dict, role: str) -> bool:
     return False
 
 
-# <<<<<<< HEAD
-# def update_person(name: str, affiliation: str, email: str, roles: list):
-# =======
 def update_person(name: str, affiliation: str, email: str, roles: list):
-# >>>>>>> 74df04e8b30faabb0c9a72d7006b6a46a5dfd620
     if not exists(email):
         raise ValueError(f'Updating non-existing person with {email=}')
     if is_valid_person(name, affiliation, email, roles=roles):
-        ret = dbc.update(PEOPLE_COLLECT,
-                         {EMAIL: email},
-                         {NAME: name, AFFILIATION: affiliation,
-                         EMAIL: email, ROLES: roles})
+        ret = dbc.update_doc(PEOPLE_COLLECT,
+                             {EMAIL: email},
+                             {NAME: name, AFFILIATION: affiliation,
+                              EMAIL: email, ROLES: roles})
         print(f'{ret=}')
         return email
-           
+
 
 def is_valid_person(name: str, affiliation: str, email: str,
                     role: str = None, roles: list = None) -> bool:
@@ -134,21 +121,6 @@ def create_person(name: str, affiliation: str, email: str, role: str):
         print(person)
         dbc.create(PEOPLE_COLLECT, person)
         return email
-
-
-# def update(name: str, affiliation: str, email: str, roles: list):
-#     people = get_people()
-#     if email not in people:
-#         raise ValueError('Updating non-existing person: {email=}')
-#     if is_valid_person(name, affiliation, email, roles=roles):
-#         people[email] = {
-#             NAME: name,
-#             AFFILIATION: affiliation,
-#             EMAIL: email,
-#             ROLES: roles
-#         }
-
-#         return email
 
 
 def get_mh_fields(journal_code=None) -> list:
