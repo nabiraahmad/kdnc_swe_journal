@@ -40,6 +40,7 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
+
 def handle_action(curr_state, action) -> str:
     if not is_valid_state(curr_state):
         raise ValueError (f'Invalid state: {curr_state}')
