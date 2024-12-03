@@ -10,7 +10,7 @@ PEOPLE_COLLECT = 'people'
 
 MIN_USER_NAME_LEN = 2
 
-# people fields:
+# the people fields:
 NAME = 'name'
 ROLES = 'roles'
 AFFILIATION = 'affiliation'
