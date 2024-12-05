@@ -10,6 +10,7 @@ SE_DB = 'seDB'
 client = None
 
 MONGO_ID = '_id'
+database = None
 
 
 def connect_db():
@@ -74,6 +75,10 @@ def update_doc(collection, filters, update_dict, db=SE_DB):
     return client[db][collection].update_one(filters, {'$set': update_dict})
 
 
+def fetch_one(db_mn, clct_nm, filters={}, no_id=False):
+    return get_one(db_mn, clct_nm, filters=filters, no_id=no_id)
+
+
 def read(collection, db=SE_DB, no_id=True) -> list:
     """
     Returns a list from the db.
@@ -102,3 +107,8 @@ def fetch_all_as_dict(key, collection, db=SE_DB):
         del doc[MONGO_ID]
         ret[doc[key]] = doc
     return ret
+
+
+# @needs_db
+def fetch_by_id(db_num, clct_nm, _id: str, no_id=False):
+    return database.fetch_by_id(db_num, clct_nm, _id, no_id=no_id)
