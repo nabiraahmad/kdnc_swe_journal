@@ -70,3 +70,7 @@ def main():
     # Delete a field
     print(f'Removing "new_field": {del_field("new_field")}')
     print(f'Fields after deleting: {get_flds()}')
+
+
+if __name__ == '__main__':
+    main()

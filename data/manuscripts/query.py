@@ -1,3 +1,4 @@
+import data.manuscripts.fields as flds
 # type of states:
 AUTHOR_REV = 'AUR'
 COPY_EDIT = 'CED'
