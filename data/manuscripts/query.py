@@ -47,25 +47,19 @@ STATE_TABLE = {
         ASSIGN_REF: {
             FUNC: lambda x: IN_REF_REV,
         },
-        ASSIGN_REF: {
+        REJECT: {
             FUNC: lambda x: REJECTED,
         },
     }
 }
 def handle_action(curr_state, action) -> str:
-    if not is_valid_state(curr_state):
-        raise ValueError (f'Invalid state: {curr_state}')
-    if not is_valid_action(action):
-        raise ValueError(f'Invalid actionL {action}')
-    new_state = curr_state
-    if curr_state == SUBMITTED:
-        if action == ASSIGN_REF:
-            new_state = IN_REF_REV
-        elif action == REJECT:
-            new_state = REJECTED
-    elif curr_state == IN_REF_REV:
-        if action == ACCEPT:
-            new_state = COPY_EDIT
-        elif action == REJECT:
-            new_state = REJECTED
-    return new_state
+   if curr_state not in STATE_TABLE:
+       raise ValueError(f'Bad state: {curr_state}')
+   if action not in STATE_TABLE[curr_state]:
+       raise ValueError(f'{action} not available in {curr_state}')
+   return STATE_TABLE[curr_state][action][FUNC](1)
+
+
+def main():
+    print(handle_action(SUBMITTED, ASSIGN_REF))
+    print(handle_action(SUBMITTED, REJECT))
