@@ -16,6 +16,14 @@ VALID_STATES = [
     REJECTED,
     SUBMITTED,
 ]
+
+SAMPLE_MANU = {
+    flds.TITLE: 'Short module import names in Python',
+    flds.AUTHOR: 'Nabira Ahmad',
+    flds.REFEREES: [],
+}
+
+
 def get_states() -> list:
     return VALID_STATES
 def is_valid_state(state: str) -> bool:
@@ -58,6 +66,12 @@ STATE_TABLE = {
         },
     }
 }
+
+def get_valid_actions_by_state(state: str):
+    valid_actions = STATE_TABLE[state].keys()
+    print(f'{valid_actions=}')
+    return valid_actions
+
 
 def sub_assign_ref(manu: dict) -> str:
     return IN_REF_REV
