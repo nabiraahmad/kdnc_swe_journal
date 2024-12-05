@@ -1,4 +1,10 @@
 # type of states:
+AUTHOR_REV = 'AUR'
+COPY_EDIT = 'CED'
+IN_REF_REV = 'REV'
+REJECTED = 'REJ'
+SUBMITTED = 'SUB'
+TEST_STATE = SUBMITTED
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
@@ -52,6 +58,37 @@ STATE_TABLE = {
         },
     }
 }
+
+def sub_assign_ref(manu: dict) -> str:
+    return IN_REF_REV
+
+FUNC = 'f'
+
+STATE_TABLE = {
+    SUBMITTED: {
+        ASSIGN_REF: {
+            # These next lines are alternatives that work the same.
+            # FUNC: sub_assign_ref,
+            FUNC: lambda m: IN_REF_REV,
+        },
+        REJECT: {
+            FUNC: lambda m: REJECTED,
+        },
+    },
+    IN_REF_REV: {
+    },
+    COPY_EDIT: {
+        DONE: {
+            FUNC: lambda m: AUTHOR_REV,
+        },
+    },
+    AUTHOR_REV: {
+    },
+    REJECTED: {
+    },
+}
+
+
 def handle_action(curr_state, action) -> str:
    if curr_state not in STATE_TABLE:
        raise ValueError(f'Bad state: {curr_state}')
