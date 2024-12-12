@@ -1,4 +1,4 @@
-# need to check import version 
+# need to check import version
 from http.client import (
     BAD_REQUEST,
     FORBIDDEN,
@@ -12,7 +12,9 @@ from unittest.mock import patch
 
 import pytest
 
-from data.people import NAME 
+from data.people import NAME
+
+from data.manuscripts.fields import DISP_NAME
 
 import server.endpoints as ep
 
@@ -69,3 +71,48 @@ def test_create_text_entry():
     assert resp_json['Return']['title'] == new_text_entry['title']
     assert resp_json['Return']['text'] == new_text_entry['text']
     assert resp_json['Return']['email'] == new_text_entry['email']
+
+def test_get_fields():
+    resp = TEST_CLIENT.get(ep.MANUSCRIPT_FIELDS_EP)
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+    for field_name, details in resp_json.items():
+        assert isinstance(field_name, str)
+        assert DISP_NAME in details
+
+def test_create_field():
+    new_field = {
+        'field_name': 'abstract',
+        'display_name': 'Abstract'
+    }
+
+    resp = TEST_CLIENT.post(ep.MANUSCRIPT_FIELDS_EP, json=new_field)
+    resp_json = resp.get_json()
+
+    if resp.status_code == OK:
+        assert resp_json['message'] == f'Field "{new_field["field_name"]}" added successfully.'
+    elif resp.status_code == BAD_REQUEST:
+        assert 'error' in resp_json
+
+def test_update_field():
+    update_data = {
+        'display_name': 'Updated Abstract'
+    }
+
+    resp = TEST_CLIENT.put(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract', json=update_data)
+    resp_json = resp.get_json()
+
+    if resp.status_code == OK:
+        assert resp_json['message'] == 'Field "abstract" updated successfully.'
+    elif resp.status_code == NOT_FOUND:
+        assert 'error' in resp_json
+
+def test_delete_field():
+    resp = TEST_CLIENT.delete(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract')
+    resp_json = resp.get_json()
+
+    if resp.status_code == OK:
+        assert resp_json['message'] == 'Field "abstract" deleted successfully.'
+    elif resp.status_code == NOT_FOUND:
+        assert 'error' in resp_json
