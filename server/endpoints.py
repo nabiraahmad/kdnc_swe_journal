@@ -11,6 +11,7 @@ from flask_cors import CORS
 import werkzeug.exceptions as wz
 import data.people as ppl
 import data.text as txt
+import data.manuscripts.fields as mflds
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +36,7 @@ PEOPLE_EP = '/people'
 MESSAGE = 'Message'
 TEXT_EP = '/text'
 RETURN = 'Return'
+MANUSCRIPT_FIELDS_EP = '/manuscripts/fields'
 
 
 @api.route(HELLO_EP)
@@ -207,3 +209,83 @@ class Masthead(Resource):
     """
     def get(self):
         return {MASTHEAD: ppl.get_masthead()}
+
+
+FIELDS_FLDS = api.model('AddNewFieldEntry', {
+    'field_name': fields.String(
+        required=True,
+        description='The name of the field'
+    ),
+    'display_name': fields.String(
+        required=True,
+        description='The display name of the field'
+    ),
+})
+
+
+@api.route(MANUSCRIPT_FIELDS_EP)
+class ManuscriptFields(Resource):
+    def get(self):
+        """
+        Retrieve all fields.
+        """
+        return mflds.get_flds()
+
+    @api.expect(FIELDS_FLDS)
+    def post(self):
+        """
+        Add a new field.
+        """
+        data = request.json
+        field_name = data.get('field_name')
+        display_name = data.get('display_name')
+        if not field_name or not display_name:
+            return {
+                'error': 'Both field_name and display_name are required.'
+            }, HTTPStatus.BAD_REQUEST
+        if mflds.add_field(field_name, display_name):
+            return {
+                'message': f'Field "{field_name}" added successfully.'
+            }, HTTPStatus.CREATED
+        else:
+            return {
+                'error': 'Field already exists.'
+            }, HTTPStatus.BAD_REQUEST
+
+
+@api.route(f'{MANUSCRIPT_FIELDS_EP}/<field_name>')
+class ManuscriptField(Resource):
+    """
+    Operations on a specific manuscript field.
+    """
+    def put(self, field_name):
+        """
+        Update a field's display name.
+        """
+        data = request.json
+        new_display_name = data.get('display_name')
+        if not new_display_name:
+            return {
+                'error': 'New display_name is required.'
+            }, HTTPStatus.BAD_REQUEST
+        if mflds.update_field(field_name, new_display_name):
+            return {
+                'message': f'Field "{field_name}" updated successfully.'
+            }
+        else:
+            return {
+                'error': f'Field "{field_name}" not found.'
+            }, HTTPStatus.NOT_FOUND
+
+    def delete(self, field_name):
+        """
+        Delete a field.
+        """
+        if mflds.del_field(field_name):
+            return {
+                'message': f'Field "{field_name}" deleted successfully.'
+            }
+        else:
+            return {
+                'error': f'Field "{field_name}" not found.'
+            }, HTTPStatus.NOT_FOUND

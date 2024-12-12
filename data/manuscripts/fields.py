@@ -25,7 +25,7 @@ def get_fld_names() -> list:
 
 def get_disp_name(fld_nm: str) -> str:
     fld = FIELDS.get(fld_nm, {})
-    return fld[DISP_NAME, 'Unknown Field']
+    return fld.get(DISP_NAME, 'Unknown Field')
 
 
 def is_field_valid(field_name: str) -> bool:
