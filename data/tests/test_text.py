@@ -12,6 +12,10 @@ def test_get_one_not_existent():
     assert txt.get_one("Not a page key!") == {}
 
 
+def test_read_one():
+    assert len(txt.read_one(txt.TEST_KEY)) > 0
+
+
 def test_create():
     key = 'NewPage'
     title = 'New Page Title'
