@@ -55,7 +55,7 @@ def exists(email: str) -> bool:
 
 
 def delete_person(email: str):
-    print(f'{EMAIL=}, {emailfget=}')
+    print(f'{EMAIL=}, {email=}')
     return dbc.del_one(PEOPLE_COLLECT, {EMAIL: email})
 
 
