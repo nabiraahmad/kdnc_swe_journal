@@ -131,7 +131,7 @@ def test_get_masthead():
 
 
 def test_read(temp_person):
-    people = ppl.read()
+    people = ppl.get_one()
     assert isinstance(people, dict)
     assert len(people) > 0
     # check for string IDs:

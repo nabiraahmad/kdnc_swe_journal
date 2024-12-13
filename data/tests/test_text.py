@@ -13,7 +13,7 @@ def test_get_one_not_existent():
 
 
 def test_read_one():
-    assert len(txt.read_one(txt.TEST_KEY)) > 0
+    assert len(txt.get_one(txt.TEST_KEY)) > 0
 
 
 def test_create():
