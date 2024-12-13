@@ -45,9 +45,9 @@ def get_people() -> dict:
 
 def get_one(email: str) -> dict:
     """
-    Return a person record if email is present in the DB
-    else return none"""
-    return dbc.get_one(PEOPLE_COLLECT, {EMAIL: email})
+    Return a person record if email is present in the DB,
+    else return an empty dictionary."""
+    return dbc.get_one(PEOPLE_COLLECT, {EMAIL: email}) or {}
 
 
 def exists(email: str) -> bool:
@@ -55,7 +55,7 @@ def exists(email: str) -> bool:
 
 
 def delete_person(email: str):
-    print(f'{EMAIL=}, {email=}')
+    print(f'{EMAIL=}, {emailfget=}')
     return dbc.del_one(PEOPLE_COLLECT, {EMAIL: email})
 
 
