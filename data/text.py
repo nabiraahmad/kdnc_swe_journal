@@ -7,7 +7,7 @@ KEY = 'key'
 TITLE = 'title'
 TEXT = 'text'
 EMAIL = 'email'
-
+SUBM_KEY = 'SubmissionsPage'
 TEST_KEY = 'HomePage'
 DEL_KEY = 'DeletePage'
 
@@ -17,6 +17,10 @@ text_dict = {
         TITLE: 'Home Page',
         TEXT: 'This is a journal about health and fitness.',
         EMAIL: 'contact@healthjournal.com',
+    },
+     SUBM_KEY: {
+        TITLE: 'Submissions Page',
+        TEXT: 'All submissions must be original work in Word format.',
     },
     DEL_KEY: {
         KEY: DEL_KEY,
