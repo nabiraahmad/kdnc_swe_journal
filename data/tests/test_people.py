@@ -10,8 +10,16 @@ NO_DOMAIN = 'kajshd@'
 NO_SUB_DOMAIN = 'kajshd@com'
 DOMAIN_TOO_SHORT = 'kajshd@nyu.e'
 DOMAIN_TOO_LONG = 'kajshd@nyu.eedduu'
+PEOPLE_COLLECT = 'people'
 
 TEMP_EMAIL = 'temp_person@temp.org'
+
+
+@pytest.fixture(autouse=True)
+def clear_database():
+    """Clear the people collection before each test."""
+    dbc.delete_many(PEOPLE_COLLECT, {})
+
 
 @pytest.fixture(scope='function')
 def temp_person():
