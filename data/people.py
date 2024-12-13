@@ -45,9 +45,9 @@ def get_people() -> dict:
 
 def get_one(email: str) -> dict:
     """
-    Return a person record if email is present in the DB,
-    else return an empty dictionary."""
-    return dbc.get_one(PEOPLE_COLLECT, {EMAIL: email}) or {}
+    Return a person record if email is present in the DB
+    else return none"""
+    return dbc.get_one(PEOPLE_COLLECT, {EMAIL: email})
 
 
 def exists(email: str) -> bool:
