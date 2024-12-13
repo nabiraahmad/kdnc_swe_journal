@@ -1,6 +1,7 @@
 import pytest
 
 import data.people as ppl
+import data.db_connect as dbc
 
 from data.roles import TEST_CODE as TEST_ROLE_CODE
 
