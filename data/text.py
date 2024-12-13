@@ -18,7 +18,7 @@ text_dict = {
         TEXT: 'This is a journal about health and fitness.',
         EMAIL: 'contact@healthjournal.com',
     },
-     SUBM_KEY: {
+    SUBM_KEY: {
         TITLE: 'Submissions Page',
         TEXT: 'All submissions must be original work in Word format.',
     },
