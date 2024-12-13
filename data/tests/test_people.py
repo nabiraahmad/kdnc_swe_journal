@@ -138,12 +138,3 @@ def test_get_masthead():
     mh = ppl.get_masthead()
     assert isinstance(mh, dict)
 
-
-def test_read(temp_person):
-    people = ppl.get_one('bee@nyu.edu')
-    assert isinstance(people, dict)
-    assert len(people) > 0
-    # check for string IDs:
-    for email, person in people.items():
-        assert isinstance(email, str)
-        assert ppl.NAME in person

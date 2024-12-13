@@ -72,4 +72,15 @@ def update(key, title=None, text=None, email=None):
 
 
 def delete(key):
-    if key
+    if key not in text_dict:
+        raise ValueError(f"Entry with key '{key}' does not exist.")
+    del text_dict[key]
+    return key
+
+
+def main():
+    print(read())
+
+    
+if __name__ == '__main__':
+    main()
