@@ -81,6 +81,6 @@ def delete(key):
 def main():
     print(read())
 
-    
+
 if __name__ == '__main__':
     main()
