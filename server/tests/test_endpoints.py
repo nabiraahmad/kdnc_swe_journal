@@ -6,6 +6,7 @@ from http.client import (
     NOT_FOUND,
     OK,
     SERVICE_UNAVAILABLE,
+    CREATED,
 )
 
 from unittest.mock import patch
@@ -55,22 +56,61 @@ def test_get_one_not_found(mock_get_people):
     resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
     assert resp.status_code == NOT_FOUND
 
-def test_create_text_entry():
-    new_text_entry = {
-        'key': 'TestPage',
-        'title': 'Test Page Title',
-        'text': 'This is the content of the test page.',
-        'email': 'test@journal.com'
-    }
+def test_read_texts():
+    with patch('data.text.read', return_value={'TestPage': {'key': 'TestPage', 'title': 'Test Title'}}):
+        resp = TEST_CLIENT.get(f'{ep.TEXT_EP}/read')
+        assert resp.status_code == OK
+        assert 'TestPage' in resp.get_json()
 
-    resp = TEST_CLIENT.put(ep.TEXT_EP + '/create', json=new_text_entry)
-    resp_json = resp.get_json()
+def test_get_text():
+    with patch('data.text.get_one', return_value={'key': 'TestPage', 'title': 'Test Title'}):
+        resp = TEST_CLIENT.get(f'{ep.TEXT_EP}/TestPage')
+        assert resp.status_code == OK
+        assert resp.get_json()['key'] == 'TestPage'
 
-    assert 'Return' in resp_json
-    assert resp_json['Return']['key'] == new_text_entry['key']
-    assert resp_json['Return']['title'] == new_text_entry['title']
-    assert resp_json['Return']['text'] == new_text_entry['text']
-    assert resp_json['Return']['email'] == new_text_entry['email']
+def test_get_text_not_found():
+    with patch('data.text.get_one', return_value={}):
+        resp = TEST_CLIENT.get(f'{ep.TEXT_EP}/NonExistentPage')
+        assert resp.status_code == NOT_FOUND
+
+def test_create_text():
+    with patch('data.text.create', return_value={'key': 'NewPage', 'title': 'New Title'}):
+        new_text = {
+            'key': 'NewPage',
+            'title': 'New Title',
+            'text': 'New Content',
+            'email': 'new@example.com'
+        }
+        resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=new_text)
+        assert resp.status_code == CREATED
+
+def test_create_text_duplicate():
+    with patch('data.text.create', side_effect=ValueError("Duplicate key")):
+        new_text = {'key': 'DuplicatePage', 'title': 'Duplicate Title'}
+        resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=new_text)
+        assert resp.status_code == BAD_REQUEST
+
+def test_update_text():
+    with patch('data.text.update', return_value={'key': 'TestPage', 'text': 'Updated Content'}):
+        update_data = {'text': 'Updated Content'}
+        resp = TEST_CLIENT.patch(f'{ep.TEXT_EP}/update/TestPage', json=update_data)
+        assert resp.status_code == OK
+
+def test_update_text_not_found():
+    with patch('data.text.update', side_effect=ValueError("Key not found")):
+        update_data = {'text': 'Should fail'}
+        resp = TEST_CLIENT.patch(f'{ep.TEXT_EP}/update/NonExistentPage', json=update_data)
+        assert resp.status_code == NOT_FOUND
+
+def test_delete_text():
+    with patch('data.text.delete', return_value='TestPage'):
+        resp = TEST_CLIENT.delete(f'{ep.TEXT_EP}/delete/TestPage')
+        assert resp.status_code == OK
+
+def test_delete_text_not_found():
+    with patch('data.text.delete', side_effect=ValueError("Key not found")):
+        resp = TEST_CLIENT.delete(f'{ep.TEXT_EP}/delete/NonExistentPage')
+        assert resp.status_code == NOT_FOUND
 
 @patch('data.manuscripts.fields.get_flds', autospec=True)
 def test_get_fields(mock_get_flds):

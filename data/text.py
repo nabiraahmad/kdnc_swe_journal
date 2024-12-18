@@ -1,86 +1,61 @@
-"""
-This module interfaces to our user data.
-"""
+import data.db_connect as dbc
 
-# fields
+TEXT_COLLECTION = 'texts'
+
 KEY = 'key'
 TITLE = 'title'
 TEXT = 'text'
 EMAIL = 'email'
-SUBM_KEY = 'SubmissionsPage'
-TEST_KEY = 'HomePage'
-DEL_KEY = 'DeletePage'
 
-text_dict = {
-    TEST_KEY: {
-        KEY: TEST_KEY,
-        TITLE: 'Home Page',
-        TEXT: 'This is a journal about health and fitness.',
-        EMAIL: 'contact@healthjournal.com',
-    },
-    SUBM_KEY: {
-        KEY: SUBM_KEY,  # Add this line
-        TITLE: 'Submissions Page',
-        TEXT: 'All submissions must be original work in Word format.',
-    },
-    DEL_KEY: {
-        KEY: DEL_KEY,
-        TITLE: 'Delete Page',
-        TEXT: 'This is a journal about health and fitness.',
-        EMAIL: 'admin@healthjournal.com',
-    },
-}
+
+def convert_mongo_id(doc):
+    if "_id" in doc:
+        doc["_id"] = str(doc["_id"])
+    return doc
 
 
 def read():
-    return text_dict
+    texts = dbc.read(TEXT_COLLECTION)
+    return [convert_mongo_id(text) for text in texts]
 
 
 def create(key, title, text, email):
-    if key in text_dict:
+    if dbc.get_one(TEXT_COLLECTION, {KEY: key}):
         raise ValueError(f"Entry with key '{key}' already exists.")
-    text_dict[key] = {
+    new_entry = {
         KEY: key,
         TITLE: title,
         TEXT: text,
         EMAIL: email,
     }
-    return text_dict[key]
+    result = dbc.create(TEXT_COLLECTION, new_entry)
+    new_entry["_id"] = str(result.inserted_id)
+    return new_entry
 
 
-def get_one(key: str) -> dict:
-    """
-    Takes a key and returns the page dict for that key
-    Returns an empty dict is key doesn't exist
-    """
-    result = {}
-    if key in text_dict:
-        result = text_dict[key]
-    return result
+def get_one(key: str):
+    text = dbc.get_one(TEXT_COLLECTION, {KEY: key})
+    return convert_mongo_id(text) if text else {}
 
 
 def update(key, title=None, text=None, email=None):
-    if key not in text_dict:
+    entry = dbc.get_one(TEXT_COLLECTION, {KEY: key})
+    if not entry:
         raise ValueError(f"Entry with key '{key}' does not exist.")
+    updates = {}
     if title:
-        text_dict[key][TITLE] = title
+        updates[TITLE] = title
     if text:
-        text_dict[key][TEXT] = text
+        updates[TEXT] = text
     if email:
-        text_dict[key][EMAIL] = email
-    return text_dict[key]
+        updates[EMAIL] = email
+    dbc.update_doc(TEXT_COLLECTION, {KEY: key}, updates)
+    updated_entry = dbc.get_one(TEXT_COLLECTION, {KEY: key})
+    return convert_mongo_id(updated_entry) if updated_entry else {}
 
 
 def delete(key):
-    if key not in text_dict:
+    result = dbc.del_one(TEXT_COLLECTION, {KEY: key})
+    if result == 0:
         raise ValueError(f"Entry with key '{key}' does not exist.")
-    del text_dict[key]
     return key
-
-
-def main():
-    print(read())
-
-
-if __name__ == '__main__':
-    main()

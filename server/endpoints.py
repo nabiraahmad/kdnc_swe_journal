@@ -124,6 +124,9 @@ class Person(Resource):
     @api.response(HTTPStatus.OK, 'Sucess.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
     def delete(self, email):
+        """
+        Delete a person
+        """
         ret = ppl.delete_person(email)
         if ret is not None:
             return {'Deleted': ret}
@@ -168,40 +171,129 @@ class PeopleCreate(Resource):
         }
 
 
-TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
-    txt.KEY: fields.String,
-    txt.TITLE: fields.String,
-    txt.TEXT: fields.String,
-    txt.EMAIL: fields.String,
-})
+TEXT_MODEL = api.model(
+    'AddNewTextEntry',
+    {
+        txt.KEY: fields.String(
+            required=True,
+            description='Unique identifier'
+        ),
+        txt.TITLE: fields.String(
+            required=True,
+            description='Title'
+        ),
+        txt.TEXT: fields.String(
+            required=True,
+            description='Content'
+        ),
+        txt.EMAIL: fields.String(
+            required=True,
+            description='Email'
+        ),
+    }
+)
 
 
-@api.route('/text/create')
-class TextCreate(Resource):
-    """
-    Add a text entry to the journal.
-    """
+@api.route(f'{TEXT_EP}/read')
+class ReadTexts(Resource):
+    def get(self):
+        """
+        Retrieve all text entries
+        """
+        try:
+            texts = txt.read()
+            return texts, HTTPStatus.OK
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
 
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
-    @api.expect(TEXT_CREATE_FLDS)
+
+@api.route(f'{TEXT_EP}/<string:key>')
+class GetText(Resource):
+    def get(self, key):
+        """
+        Retrieve text entry by key
+        """
+        try:
+            text_entry = txt.get_one(key)
+            if not text_entry:
+                return {
+                    'error': f'No entry found for key: {key}'
+                }, HTTPStatus.NOT_FOUND
+            return text_entry, HTTPStatus.OK
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@api.route(f'{TEXT_EP}/create')
+class CreateText(Resource):
+    @api.expect(TEXT_MODEL)
     def put(self):
         """
-        Add a text entry.
+        Create new text entry
         """
-
         try:
-            key = request.json.get(txt.KEY)
-            title = request.json.get(txt.TITLE)
-            text_content = request.json.get(txt.TEXT)
-            email = request.json.get(txt.EMAIL)
-            ret = txt.create(key, title, text_content, email)
-        except Exception as err:
-            raise wz.NotAcceptable(f'Could not add text entry: {err}')
-        return {
-            MESSAGE: 'Text entry added!',
-            RETURN: ret,
-        }
+            data = request.json
+            key = data.get(txt.KEY)
+            title = data.get(txt.TITLE)
+            text = data.get(txt.TEXT)
+            email = data.get(txt.EMAIL)
+            new_entry = txt.create(key, title, text, email)
+            return {
+                'message': 'Text entry created successfully',
+                'entry': new_entry
+            }, HTTPStatus.CREATED
+        except ValueError as e:
+            return {'error': str(e)}, HTTPStatus.BAD_REQUEST
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@api.route(f'{TEXT_EP}/update/<string:key>')
+class UpdateText(Resource):
+    @api.expect(TEXT_MODEL)
+    def patch(self, key):
+        """
+        Update an existing text entry
+        """
+        try:
+            data = request.json
+            title = data.get(txt.TITLE)
+            text = data.get(txt.TEXT)
+            email = data.get(txt.EMAIL)
+            updated_entry = txt.update(
+                key,
+                title=title,
+                text=text,
+                email=email
+            )
+            return {
+                'message': 'Text entry updated successfully',
+                'entry': updated_entry
+            }, HTTPStatus.OK
+        except ValueError as e:
+            return {'error': str(e)}, HTTPStatus.NOT_FOUND
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@api.route(f'{TEXT_EP}/delete/<string:key>')
+class DeleteText(Resource):
+    def delete(self, key):
+        """
+        Delete a text entry
+        """
+        try:
+            deleted_key = txt.delete(key)
+            return {
+                'message': (
+                    f'Text entry with key "{deleted_key}" '
+                    'deleted successfully'
+                )
+            }, HTTPStatus.OK
+        except ValueError as e:
+            return {'error': str(e)}, HTTPStatus.NOT_FOUND
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 MASTHEAD = 'Masthead'
