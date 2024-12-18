@@ -135,7 +135,7 @@ def test_create_field(mock_add_field):
 def test_update_field(mock_update_field):
     update_data = {'display_name': 'Updated Abstract'}
     mock_update_field.return_value = True
-    resp = TEST_CLIENT.put(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract', json=update_data)
+    resp = TEST_CLIENT.patch(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract', json=update_data)
     assert resp.status_code == OK
 
 @patch('data.manuscripts.fields.del_field', autospec=True)

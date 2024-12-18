@@ -355,24 +355,34 @@ class ManuscriptField(Resource):
     """
     Operations on a specific manuscript field.
     """
-    def put(self, field_name):
+    @api.expect(FIELDS_FLDS)
+    def patch(self, field_name):
         """
         Update a field's display name.
         """
-        data = request.json
-        new_display_name = data.get('display_name')
-        if not new_display_name:
-            return {
-                'error': 'New display_name is required.'
-            }, HTTPStatus.BAD_REQUEST
-        if mflds.update_field(field_name, new_display_name):
-            return {
-                'message': f'Field "{field_name}" updated successfully.'
-            }
-        else:
+        try:
+            data = request.json
+            new_display_name = data.get('display_name')
+
+            if not new_display_name:
+                return {
+                    'error': 'A new display_name is required.'
+                }, HTTPStatus.BAD_REQUEST
+
+            if mflds.update_field(field_name, new_display_name):
+                return {
+                    'message': f'Field "{field_name}" updated successfully.',
+                    'field': {
+                        'field_name': field_name,
+                        'display_name': new_display_name
+                    }
+                }, HTTPStatus.OK
+
             return {
                 'error': f'Field "{field_name}" not found.'
             }, HTTPStatus.NOT_FOUND
+        except Exception as e:
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     def delete(self, field_name):
         """
