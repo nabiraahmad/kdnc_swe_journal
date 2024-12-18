@@ -87,15 +87,20 @@ class JournalTitle(Resource):
 
 @api.route(PEOPLE_EP)
 class People(Resource):
-    """
-    This class handles creating, reading,
-    updating, and deleting our journal people.
-    """
     def get(self):
         """
         Retrieve the journal people
         """
-        return ppl.get_people()
+        try:
+            print("Fetching all people from the database...")
+            people = ppl.get_people()
+            print(f"Fetched people: {people}")
+            return people, HTTPStatus.OK
+        except Exception as e:
+            print(f"Error in /people endpoint: {e}")
+            return {
+                "error": "Internal Server Error"
+            }, HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 # People/User Delete Class

@@ -132,3 +132,19 @@ def test_get_masthead():
     mh = ppl.get_masthead()
     assert isinstance(mh, dict)
 
+def test_db_connection():
+    """
+    Test if the database connection works.
+    """
+    try:
+        # Attempt to connect to the database
+        client = dbc.connect_db()
+        assert client is not None, "Database connection failed"
+
+        # Verify the database is accessible
+        db_list = client.list_database_names()
+        assert dbc.SE_DB in db_list or len(db_list) > 0, "No databases found in MongoDB"
+
+        print(f"MongoDB connection successful. Databases: {db_list}")
+    except Exception as e:
+        pytest.fail(f"MongoDB connection test failed: {e}")
