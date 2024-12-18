@@ -72,7 +72,9 @@ def test_create_text_entry():
     assert resp_json['Return']['text'] == new_text_entry['text']
     assert resp_json['Return']['email'] == new_text_entry['email']
 
-def test_get_fields():
+@patch('data.manuscripts.fields.get_flds', autospec=True)
+def test_get_fields(mock_get_flds):
+    mock_get_flds.return_value = {'title': {DISP_NAME: 'Title'}}
     resp = TEST_CLIENT.get(ep.MANUSCRIPT_FIELDS_EP)
     assert resp.status_code == OK
     resp_json = resp.get_json()
@@ -81,38 +83,23 @@ def test_get_fields():
         assert isinstance(field_name, str)
         assert DISP_NAME in details
 
-def test_create_field():
-    new_field = {
-        'field_name': 'abstract',
-        'display_name': 'Abstract'
-    }
-
+@patch('data.manuscripts.fields.add_field', autospec=True)
+def test_create_field(mock_add_field):
+    new_field = {'field_name': 'abstract', 'display_name': 'Abstract'}
+    mock_add_field.return_value = True
     resp = TEST_CLIENT.post(ep.MANUSCRIPT_FIELDS_EP, json=new_field)
-    resp_json = resp.get_json()
+    assert resp.status_code == 201
+    assert resp.get_json()['message'] == f'Field "{new_field["field_name"]}" added successfully.'
 
-    if resp.status_code == OK:
-        assert resp_json['message'] == f'Field "{new_field["field_name"]}" added successfully.'
-    elif resp.status_code == BAD_REQUEST:
-        assert 'error' in resp_json
-
-def test_update_field():
-    update_data = {
-        'display_name': 'Updated Abstract'
-    }
-
+@patch('data.manuscripts.fields.update_field', autospec=True)
+def test_update_field(mock_update_field):
+    update_data = {'display_name': 'Updated Abstract'}
+    mock_update_field.return_value = True
     resp = TEST_CLIENT.put(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract', json=update_data)
-    resp_json = resp.get_json()
+    assert resp.status_code == OK
 
-    if resp.status_code == OK:
-        assert resp_json['message'] == 'Field "abstract" updated successfully.'
-    elif resp.status_code == NOT_FOUND:
-        assert 'error' in resp_json
-
-def test_delete_field():
+@patch('data.manuscripts.fields.del_field', autospec=True)
+def test_delete_field(mock_del_field):
+    mock_del_field.return_value = True
     resp = TEST_CLIENT.delete(f'{ep.MANUSCRIPT_FIELDS_EP}/abstract')
-    resp_json = resp.get_json()
-
-    if resp.status_code == OK:
-        assert resp_json['message'] == 'Field "abstract" deleted successfully.'
-    elif resp.status_code == NOT_FOUND:
-        assert 'error' in resp_json
+    assert resp.status_code == OK

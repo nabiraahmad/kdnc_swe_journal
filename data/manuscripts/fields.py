@@ -1,76 +1,55 @@
+import data.db_connect as dbc
 
 TITLE = 'title'
 DISP_NAME = 'disp_name'
 AUTHOR = 'author'
 REFEREES = 'referees'
 
-TEST_FLD_NM = TITLE
-TEST_FLD_DISP_NM = 'Title'
 
-
-FIELDS = {
-    TITLE: {
-        DISP_NAME: TEST_FLD_DISP_NM,
-    },
-}
-
+FIELDS_COLLECTION = 'fields'
+client = dbc.connect_db()
 
 def get_flds() -> dict:
-    return FIELDS
-
+    return dbc.read_dict(FIELDS_COLLECTION, 'field_name')
 
 def get_fld_names() -> list:
-    return list(FIELDS.keys())
-
+    return list(get_flds().keys())
 
 def get_disp_name(fld_nm: str) -> str:
-    fld = FIELDS.get(fld_nm, {})
-    return fld.get(DISP_NAME, 'Unknown Field')
-
+    field = dbc.get_one(FIELDS_COLLECTION, {'field_name': fld_nm})
+    if field:
+        return field.get('disp_name', 'Unknown Field')
+    return 'Unknown Field'
 
 def is_field_valid(field_name: str) -> bool:
-    return field_name in FIELDS
-
+    return dbc.get_one(FIELDS_COLLECTION, {'field_name': field_name}) is not None
 
 def add_field(field_name: str, display_name: str) -> bool:
-    if field_name in FIELDS:
+    if is_field_valid(field_name):
         return False
-    FIELDS[field_name] = {DISP_NAME: display_name}
+    dbc.create(FIELDS_COLLECTION, {'field_name': field_name, 'disp_name': display_name})
     return True
-
 
 def update_field(field_name: str, new_display_name: str) -> bool:
-    if field_name not in FIELDS:
+    if not is_field_valid(field_name):
         return False
-    FIELDS[field_name][DISP_NAME] = new_display_name
+    dbc.update_doc(FIELDS_COLLECTION, {'field_name': field_name}, {'disp_name': new_display_name})
     return True
-
 
 def del_field(field_name: str) -> bool:
-    if field_name not in FIELDS:
-        return False
-    del FIELDS[field_name]
-    return True
-
+    return dbc.del_one(FIELDS_COLLECTION, {'field_name': field_name}) > 0
 
 def main():
-    print(f'{get_flds()=}')
+    print(f'Fields: {get_flds()}')
     print(f'Field names: {get_fld_names()}')
-    print(f'Display name for "{TITLE}": {get_disp_name(TITLE)}')
-    print(f'Is "{TITLE}" valid? {is_field_valid(TITLE)}')
-
-    # Add a new field
+    print(f'Display name for "title": {get_disp_name("title")}')
+    print(f'Is "title" valid? {is_field_valid("title")}')
     print(f'Adding new field: {add_field("new_field", "New Field")}')
     print(f'Fields after adding: {get_flds()}')
-
-    # Update a field's display name
-    print(f'Updating "{TITLE}" display name: {update_field(TITLE, "Updated Title")}')
+    print(f'Updating "title" display name: {update_field("title", "Updated Title")}')
     print(f'Fields after updating: {get_flds()}')
-
-    # Delete a field
     print(f'Removing "new_field": {del_field("new_field")}')
     print(f'Fields after deleting: {get_flds()}')
-
 
 if __name__ == '__main__':
     main()
