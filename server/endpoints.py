@@ -311,11 +311,11 @@ class Masthead(Resource):
 FIELDS_FLDS = api.model('AddNewFieldEntry', {
     'field_name': fields.String(
         required=True,
-        description='The name of the field'
+        description='Name'
     ),
     'display_name': fields.String(
         required=True,
-        description='The display name of the field'
+        description='Display Name'
     ),
 })
 
