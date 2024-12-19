@@ -13,8 +13,11 @@ echo "Rebuilding the web app for $PROJECT_DIR"
 echo "Navigating to the project directory..."
 cd $PROJECT_DIR || { echo "Error: Project directory not found!"; exit 1; }
 
-# Verify we are in the Git repository
+# Debug: Show current directory and contents
 echo "Current directory: $(pwd)"
+ls -a
+
+# Verify we are in the Git repository
 if [ ! -d ".git" ]; then
     echo "Error: Not a Git repository. Aborting."
     exit 1
@@ -22,7 +25,7 @@ fi
 
 # Pull the latest code
 echo "Pulling code from GitHub..."
-git pull origin master || { echo "Git pull failed!"; exit 1; }
+git pull || { echo "Git pull failed!"; exit 1; }
 
 # Activate the virtual environment
 echo "Activating the virtual environment..."
