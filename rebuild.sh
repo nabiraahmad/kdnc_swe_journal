@@ -2,26 +2,38 @@
 # This runs on PythonAnywhere servers: fetches new code,
 # installs needed packages, and restarts the server.
 
-PROJECT_DIR="/home/$PA_USER/$PROJ_DIR"
-VENV_PATH="$PROJECT_DIR/$VENV"
-WSGI_PATH="/var/www/$PA_DOMAIN_wsgi.py"
+# Set environment variables
+PROJECT_DIR="/home/ktn3138/kdnc_swe_journal"
+VENV_PATH="$PROJECT_DIR/venv"
+WSGI_PATH="/var/www/ktn3138.pythonanywhere_com_wsgi.py"
 
-touch rebuild
-echo "Rebuilding $PA_DOMAIN"
+echo "Rebuilding the web app for $PROJECT_DIR"
 
-cd $PROJECT_DIR || { echo "Project directory not found!"; exit 1; }
+# Navigate to the project directory
+echo "Navigating to the project directory..."
+cd $PROJECT_DIR || { echo "Error: Project directory not found!"; exit 1; }
 
-echo "Pulling code from master"
+# Verify we are in the Git repository
+echo "Current directory: $(pwd)"
+if [ ! -d ".git" ]; then
+    echo "Error: Not a Git repository. Aborting."
+    exit 1
+fi
+
+# Pull the latest code
+echo "Pulling code from GitHub..."
 git pull origin master || { echo "Git pull failed!"; exit 1; }
 
-echo "Activate the virtual env $VENV for user $PA_USER"
+# Activate the virtual environment
+echo "Activating the virtual environment..."
 source $VENV_PATH/bin/activate || { echo "Virtual environment activation failed!"; exit 1; }
 
-echo "Install packages"
-pip install --upgrade -r requirements.txt
+# Install dependencies
+echo "Installing dependencies..."
+pip install --upgrade -r requirements.txt || { echo "Dependency installation failed!"; exit 1; }
 
-echo "Restarting the web server"
+# Restart the web server
+echo "Restarting the web server..."
 touch $WSGI_PATH || { echo "Failed to restart web server!"; exit 1; }
 
-touch reboot
-echo "Finished rebuild."
+echo "Rebuild finished successfully."
