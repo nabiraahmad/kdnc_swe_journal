@@ -5,7 +5,7 @@
 # Set environment variables
 PROJECT_DIR="/home/ktn3138/kdnc_swe_journal"
 VENV_PATH="$PROJECT_DIR/venv"
-WSGI_PATH="/var/www/ktn3138.pythonanywhere_com_wsgi.py"
+WSGI_PATH="/var/www/ktn3138_pythonanywhere_com_wsgi.py"
 
 echo "Rebuilding the web app for $PROJECT_DIR"
 

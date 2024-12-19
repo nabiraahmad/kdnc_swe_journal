@@ -89,7 +89,7 @@ class JournalTitle(Resource):
 class People(Resource):
     def get(self):
         """
-        Retrieve the journal people
+        Retrieve all journal people
         """
         try:
             print("Fetching all people from the database...")
