@@ -13,10 +13,6 @@ echo "Rebuilding the web app for $PROJECT_DIR"
 echo "Navigating to the project directory..."
 cd $PROJECT_DIR || { echo "Error: Project directory not found!"; exit 1; }
 
-# Debug: Show current directory and contents
-echo "Current directory: $(pwd)"
-ls -a
-
 # Verify we are in the Git repository
 if [ ! -d ".git" ]; then
     echo "Error: Not a Git repository. Aborting."

@@ -229,7 +229,7 @@ class CreateText(Resource):
     @api.expect(TEXT_MODEL)
     def put(self):
         """
-        Create new text entry
+        Create a new text entry
         """
         try:
             data = request.json
