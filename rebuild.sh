@@ -37,13 +37,16 @@
 
 # echo "Rebuild finished successfully."
 
+PROJECT_DIR="/home/ktn3138/kdnc_swe_journal"
 VENV_PATH="$PROJECT_DIR/venv"
+WSGI_PATH="/var/www/ktn3138_pythonanywhere_com_wsgi.py"
 
 touch rebuild
-echo "Rebuilding $PA_DOMAIN"
 
-echo "Pulling code from main"
-git pull origin master
+cd $PROJECT_DIR || { echo "Error: Project directory not found!"; exit 1; }
+
+echo "Pulling code from master"
+git pull origin master || { echo "Git pull failed!"; exit 1; }
 
 echo "Activate the virtual env $VENV for user $PA_USER"
 # source /home/$PA_USER/.virtualenvs/$VENV/bin/activate
@@ -54,7 +57,7 @@ pip install --upgrade -r requirements.txt
 
 export API_TOKEN="$API_TOKEN"
 echo "Going to reboot the webserver using $API_TOKEN"
-pa_reload_webapp.py $PA_DOMAIN
+pa_reload_webapp.py --api-token=$API_TOKEN ktn3138.pythonanywhere.com || { echo "Failed to reboot web server!"; exit 1; }
 
 touch reboot
 echo "Finished rebuild."
