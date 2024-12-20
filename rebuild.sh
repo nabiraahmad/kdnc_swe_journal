@@ -38,6 +38,7 @@
 # echo "Rebuild finished successfully."
 
 PROJECT_DIR="/home/ktn3138/kdnc_swe_journal"
+PA_DOMAIN="ktn3138.pythonanywhere.com"
 VENV_PATH="$PROJECT_DIR/venv"
 
 touch rebuild
