@@ -10,6 +10,7 @@ echo "Project dir = $PROJ_DIR"
 echo "PA domain = $PA_DOMAIN"
 echo "Virtual env = $VENV"
 echo "PA user = $PA_USER"
+echo "Token = $API_TOKEN"
 
 if [ -z "$DEMO_PA_PWD" ]; then
     echo "The PythonAnywhere password var (DEMO_PA_PWD) must be set in the env."
@@ -23,3 +24,5 @@ sshpass -p $DEMO_PA_PWD ssh -o "StrictHostKeyChecking no" $PA_USER@ssh.pythonany
     cd /home/$PA_USER/$PROJ_DIR
     ./rebuild.sh
 EOF
+
+echo "Deployment completed successfully."
