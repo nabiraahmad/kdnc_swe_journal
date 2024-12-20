@@ -21,6 +21,10 @@ echo "PA password = $DEMO_PA_PWD"
 
 echo "SSHing to PythonAnywhere."
 sshpass -p $DEMO_PA_PWD ssh -o "StrictHostKeyChecking no" $PA_USER@ssh.pythonanywhere.com << EOF
+    export PA_DOMAIN=$PA_DOMAIN
+    export API_TOKEN=$API_TOKEN
+    export VENV=$VENV
+    export PA_USER=$PA_USER
     cd /home/$PA_USER/$PROJ_DIR
     ./rebuild.sh
 EOF
