@@ -39,7 +39,6 @@
 
 PROJECT_DIR="/home/ktn3138/kdnc_swe_journal"
 VENV_PATH="$PROJECT_DIR/venv"
-WSGI_PATH="/var/www/ktn3138_pythonanywhere_com_wsgi.py"
 
 touch rebuild
 
@@ -57,7 +56,7 @@ pip install --upgrade -r requirements.txt
 
 export API_TOKEN="$API_TOKEN"
 echo "Going to reboot the webserver using $API_TOKEN"
-pa_reload_webapp.py --api-token=$API_TOKEN ktn3138.pythonanywhere.com || { echo "Failed to reboot web server!"; exit 1; }
+pa_reload_webapp.py $PA_DOMAIN
 
 touch reboot
 echo "Finished rebuild."
