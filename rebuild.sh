@@ -37,14 +37,17 @@
 
 # echo "Rebuild finished successfully."
 
+VENV_PATH="$PROJECT_DIR/venv"
+
 touch rebuild
 echo "Rebuilding $PA_DOMAIN"
 
 echo "Pulling code from main"
-git pull origin main
+git pull origin master
 
 echo "Activate the virtual env $VENV for user $PA_USER"
-source /home/$PA_USER/.virtualenvs/$VENV/bin/activate
+# source /home/$PA_USER/.virtualenvs/$VENV/bin/activate
+source $VENV_PATH/bin/activate || { echo "Virtual environment activation failed!"; exit 1; }
 
 echo "Install packages"
 pip install --upgrade -r requirements.txt
